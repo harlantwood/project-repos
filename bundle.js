@@ -43902,7 +43902,7 @@ process.umask = function() { return 0; };
 }).call(this);
 
 },{}],25:[function(require,module,exports){
-var $, DataTable, EXPECTED, Octokat, Promise, a, check, circle, getReadmes, img, log, main, matrix, p, raw, ref, ref1, render, renderable, show, sortBy, table, tbody, td, th, thead, tr, travis;
+var $, DataTable, EXPECTED, Octokat, Promise, a, check, circle, getReadmes, img, log, main, matrix, p, raw, ref, ref1, render, renderable, show, sortBy, span, table, tbody, td, th, thead, tr, travis;
 
 Promise = require('bluebird');
 
@@ -43916,7 +43916,7 @@ $ = require('jquery');
 
 DataTable = require('datatables');
 
-ref1 = require('teacup'), a = ref1.a, img = ref1.img, raw = ref1.raw, render = ref1.render, renderable = ref1.renderable, table = ref1.table, tbody = ref1.tbody, td = ref1.td, th = ref1.th, thead = ref1.thead, tr = ref1.tr;
+ref1 = require('teacup'), a = ref1.a, img = ref1.img, raw = ref1.raw, render = ref1.render, renderable = ref1.renderable, span = ref1.span, table = ref1.table, tbody = ref1.tbody, td = ref1.td, th = ref1.th, thead = ref1.thead, tr = ref1.tr;
 
 EXPECTED = {
   'Made By': '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)',
@@ -43934,10 +43934,6 @@ main = function() {
     return getReadmes(repos);
   }).then(function(repos) {
     return show(matrix(repos));
-  }).then(function() {
-    return $('table').DataTable({
-      paging: false
-    });
   });
 };
 
@@ -43955,7 +43951,9 @@ getReadmes = function(repos) {
 };
 
 matrix = renderable(function(repos) {
-  return table(function() {
+  return table({
+    "class": 'stripe'
+  }, function() {
     thead(function() {
       return tr(function() {
         var expectedName, results;
@@ -44019,13 +44017,21 @@ matrix = renderable(function(repos) {
   });
 });
 
-check = function(success) {
+check = renderable(function(success) {
   if (success) {
-    return '✓';
+    return span({
+      "class": 'success'
+    }, function() {
+      return '✓';
+    });
   } else {
-    return '✗';
+    return span({
+      "class": 'failure'
+    }, function() {
+      return '✗';
+    });
   }
-};
+});
 
 travis = renderable(function(repoName) {
   return a({
@@ -44048,7 +44054,11 @@ circle = renderable(function(repoName) {
 });
 
 show = function(html) {
-  return $('#content').html(html);
+  $('#content').html(html);
+  return $('table').DataTable({
+    paging: false,
+    searching: false
+  });
 };
 
 main();
